@@ -1,46 +1,53 @@
-import React from 'react'
-import Togglable from './Togglable'
-import FullBlog from './FullBlog'
+import React, { useState } from 'react'
 
 
-const Blog = ({ blog, updateLikes, deleteBlog, user }) => {
-  const viewFullBlog = () => {
+const Blog = ({ blog, updateLikes, deleteBlog, sameUser }) => {
+  const [visibility, setVisibility] = useState(false)
 
-    if (blog.user.username === user.username) {
-      return (
+  const removeButton = sameUser === true
+    ? <button onClick={deleteBlog}>remove</button>
+    : null
+
+  if (visibility) {
+
+    return (
+      <div className='blog'>
+
         <div>
-          <Togglable buttonLabel='view'>
-            <FullBlog blog={blog}
-              user={user}
-              updateLikes={() => updateLikes(blog)}
-              deleteBlog={() => deleteBlog(blog)}
-              removeButton={true}
-            />
-          </Togglable>
+          {blog.title} - {blog.author}
+          <button onClick={() => setVisibility(!visibility)}>hide</button>
         </div>
-      )
 
-    } else {
+        <div>
+          {blog.url}
+        </div>
 
-      return (
-        <Togglable buttonLabel='view'>
-          <FullBlog blog={blog}
-            user={user}
-            updateLikes={() => updateLikes(blog)}
-            deleteBlog={() => deleteBlog(blog)}
-            removeButton={false}
-          />
-        </Togglable>
-      )
-    }
+        <div>
+          likes: {blog.likes}
+          <button onClick={updateLikes}>like</button>
+        </div>
+
+        <div>
+          {blog.user.name}
+        </div>
+
+        <div>
+          {removeButton}
+        </div>
+
+
+      </div>
+    )
 
   }
 
   return (
     <div className='blog'>
+      <div>
+        {blog.title} - {blog.author}
 
-      {blog.title} - {blog.author}
-      {viewFullBlog()}
+        <button onClick={() => setVisibility(!visibility)}>view</button>
+      </div>
 
     </div>
   )

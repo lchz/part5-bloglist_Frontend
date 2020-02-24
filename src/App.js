@@ -109,11 +109,12 @@ const App = () => {
 
 
   /** Update likes */
-  const updateLikes = async (blog) => {
-
+  const updateLikes = async (event, blog) => {
+    event.preventDefault()
     const updatedBlog = { ...blog, likes: blog.likes+1 }
 
     const returnedBlog = await blogService.update(blog.id, updatedBlog)
+    console.log('returned:', returnedBlog)
     setBlogs(blogs.map(b => b.id !== blog.id ? b : returnedBlog))
   }
 
@@ -151,6 +152,10 @@ const App = () => {
     </form>
   )
 
+  const sameUser = (blog) => {
+    return user.username === blog.user.username
+  }
+
 
   return (
     <div>
@@ -169,8 +174,8 @@ const App = () => {
           {blogs.map(blog =>
             <Blog key={blog.id}
               blog={blog}
-              user={user}
-              updateLikes={() => updateLikes(blog)}
+              sameUser={sameUser(blog)}
+              updateLikes={(event) => updateLikes(event, blog)}
               deleteBlog={() => deleteBlog(blog)}
             />
           )}
